@@ -16,7 +16,7 @@ const Navigation = ({ searchTerm, onSearchChange, onSearchSubmit }) => {
             className="w-full p-2 border border-amber-800 rounded-l-md focus:outline-none focus:ring-2 focus:ring-amber-300"
           />
           <button type="submit" className="bg-amber-500 text-amber-700 px-4 py-2 rounded-r-md hover:bg-amber-400 transition">
-            <i className="fas fa-magnifying-glass"></i>
+            🔍<i className="fas fa-magnifying-glass"></i>
           </button>
         </form>
         <button className="text-amber-700 hover:text-gray-500 transition">
