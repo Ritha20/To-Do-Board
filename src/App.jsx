@@ -17,9 +17,19 @@ const App = () => {
   const [newTask, setNewTask] = useState({ name: '', dueDate: '', status: 'pending' });
   const [showAddForm, setShowAddForm] = useState(false);
 
+  // Better sensors with activation constraints
   const sensors = useSensors(
-    useSensor(MouseSensor),
-    useSensor(TouchSensor)
+    useSensor(MouseSensor, {
+      activationConstraint: {
+        distance: 3, // Only start dragging after 3px movement
+      },
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 150, // 150ms delay for touch
+        tolerance: 5, // 5px tolerance
+      },
+    })
   );
 
   // Task Operations
@@ -42,6 +52,7 @@ const App = () => {
   };
 
   const handleEditTask = (task) => {
+    console.log('Editing task:', task.id);
     const newName = prompt('Edit task name:', task.name);
     if (newName !== null && newName.trim() !== '') {
       setTasks(prev => prev.map(t => 
@@ -58,22 +69,25 @@ const App = () => {
   };
 
   const handleDeleteTask = (taskId) => {
+    console.log('Deleting task:', taskId);
     if (window.confirm('Are you sure you want to delete this task?')) {
       setTasks(prev => prev.filter(t => t.id !== taskId));
     }
   };
 
   const handleToggleStatus = (taskId) => {
+    console.log('Toggling status for task:', taskId);
     setTasks(prev => prev.map(task => {
       if (task.id === taskId) {
         const newStatus = task.status === 'pending' ? 'completed' : 'pending';
+        console.log(`Changed task ${taskId} from ${task.status} to ${newStatus}`);
         return { ...task, status: newStatus };
       }
       return task;
     }));
   };
 
-  // Handle task movement - THIS WAS MISSING!
+  // Handle task movement
   const handleDragEnd = (event) => {
     const { active, delta } = event;
     
@@ -94,7 +108,7 @@ const App = () => {
       <Navigation />
 
       <div className="container mx-auto px-4 sm:px-8 py-8">
-        <h1 className="text-xl font-mono font-bold mb-6 text-center text-white">Free Moving Task Board</h1>
+        <h1 className="text-xl font-mono font-bold mb-6 text-center text-white">Click beloow to add task 😎 Bad Girllll</h1>
 
         {/* Add Task Section */}
         <div className="mb-8 flex justify-center">
@@ -109,6 +123,7 @@ const App = () => {
                   onChange={(e) => setNewTask({ ...newTask, name: e.target.value })}
                   className="w-full mb-3 p-3 border rounded text-sm sm:text-base"
                   required
+                  autoFocus
                 />
                 <input
                   type="date"
